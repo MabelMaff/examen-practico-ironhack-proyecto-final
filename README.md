@@ -157,9 +157,3 @@ git clone https://github.com/TU_USUARIO/NOMBRE_DEL_REPO.git
 
 Mábel Martínez Rodríguez
 
-```
-
----
-
-
-
