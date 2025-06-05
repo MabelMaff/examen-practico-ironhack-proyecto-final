@@ -1,159 +1,132 @@
-# 🏥 Proyecto Backend - Examen Práctico Módulo 3
+# 🎬 Movie Management API
 
-Este proyecto es una aplicación backend desarrollada con **Java + Spring Boot**, conectada a una base de datos **MySQL**, que modela un sistema de gestión para un centro médico.
+Proyecto desarrollado como **examen práctico del Módulo 3** del bootcamp, usando **Java + Spring Boot + MySQL**.
 
-## ✅ Objetivo
-
-Implementar una aplicación completa con:
-
-- Modelo de datos con relaciones
-- Repositorios con JPA
-- Controladores REST con rutas CRUD
-- Capa de servicios
-- Pruebas unitarias
+Esta API permite gestionar películas, directores, premios y reseñas a través de rutas RESTful. Está construida con Spring Data JPA y conectada a una base de datos relacional.
 
 ---
 
-## 🧱 Estructura del proyecto
+## 🧱 Entidades del sistema
+
+### `Movie`
+- `id` (Long)
+- `title` (String)
+- `genre` (String)
+- `releaseYear` (int)
+- Relación `ManyToOne` con `Director`
+- Relación `OneToMany` con `Award` y `Review`
+
+### `Director`
+- `id` (Long)
+- `name` (String)
+- `birthYear` (int)
+- Relación `OneToMany` con `Movie`
+
+### `Award`
+- `id` (Long)
+- `name` (String)
+- `year` (int)
+- Relación `ManyToOne` con `Movie`
+
+### `Review`
+- `id` (Long)
+- `reviewerName` (String)
+- `rating` (int)
+- `comment` (String)
+- Relación `ManyToOne` con `Movie`
+
+---
+
+## 📦 Estructura del proyecto
 
 ```
 
-src/
-├── main/
-│   ├── java/
-│   │   └── com/example/clinic/
-│   │       ├── controllers/
-│   │       │   └── DoctorController.java
-│   │       │   └── PatientController.java
-│   │       ├── models/
-│   │       │   └── Doctor.java
-│   │       │   └── Patient.java
-│   │       ├── repositories/
-│   │       │   └── DoctorRepository.java
-│   │       │   └── PatientRepository.java
-│   │       ├── services/
-│   │       │   └── DoctorService.java
-│   │       │   └── PatientService.java
-│   │       └── ClinicApplication.java
-│   └── resources/
-│       └── application.properties
-│
-├── test/
-│   └── java/
-│       └── com/example/clinic/
-│           ├── DoctorRepositoryTest.java
-│           └── PatientControllerTest.java
+src
+└── main
+└── java
+└── com.example.movies
+├── models
+├── repositories
+├── controllers
+└── test
+└── java
+└── com.example.movies
+└── MovieTests.java
 
 ````
 
 ---
 
-## 🧬 Entidades
+## 🚀 Endpoints principales
 
-### Doctor
+### 🎥 Movies
+- `GET /movies` → Obtener todas las películas
+- `GET /movies/{id}` → Película por ID
+- `POST /movies` → Crear nueva película
+- `PUT /movies/{id}` → Actualizar película
+- `DELETE /movies/{id}` → Eliminar película
 
-```java
-@Entity
-public class Doctor {
-    @Id
-    private Long id;
-    private String name;
-    private String department;
-    private String status;
-    // Getters & Setters
-}
-````
+### 🎬 Directors
+- `GET /directors`
+- `POST /directors`
 
-### Patient
+### 🏆 Awards
+- `GET /awards`
+- `POST /awards`
 
-```java
-@Entity
-public class Patient {
-    @Id
-    private Long id;
-    private String name;
-    private LocalDate dateOfBirth;
-
-    @ManyToOne
-    @JoinColumn(name = "admitted_by")
-    private Doctor admittedBy;
-}
-```
+### ✍️ Reviews
+- `GET /reviews`
+- `POST /reviews`
 
 ---
 
-## 🔌 Repositorios
+## 💻 Requisitos para ejecutar el proyecto
 
-* `DoctorRepository`: con método personalizado `findByStatus(String status)`
-* `PatientRepository`: con método `findByAdmittedByDepartment(String department)`
+- Java 17 o superior
+- Spring Boot 3.x
+- MySQL corriendo localmente
 
----
-
-## 🔁 Controladores REST
-
-Implementados con rutas para:
-
-* `GET` – obtener pacientes y doctores
-* `POST` – añadir pacientes y doctores
-* `PUT` / `PATCH` – actualizar estado o departamento
-* `DELETE` – eliminar registros
-
----
-
-## 🧠 Servicio
-
-La lógica entre los controladores y los repositorios está gestionada por `DoctorService` y `PatientService`.
-
----
-
-## 🧪 Pruebas
-
-Se han implementado:
-
-* `DoctorRepositoryTest.java` – test unitario de método personalizado
-* `PatientControllerTest.java` – test de endpoint `GET /patients`
-
----
-
-## 💾 Configuración de Base de Datos
-
-En `application.properties`:
+Asegúrate de configurar tu base de datos en `application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/clinic_db
+spring.datasource.url=jdbc:mysql://localhost:3306/movies_db
 spring.datasource.username=TU_USUARIO
 spring.datasource.password=TU_CONTRASEÑA
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-```
+````
 
 ---
 
-## 🛠 Cómo ejecutar el proyecto
+## ✅ Funcionalidades cubiertas (Obligatorias)
 
-1. Clona el repositorio:
-
-```bash
-git clone https://github.com/TU_USUARIO/NOMBRE_DEL_REPO.git
-```
-
-2. Configura `application.properties` con tu base de datos
-
-3. Lanza la aplicación desde tu IDE o ejecuta:
-
-```bash
-./mvnw spring-boot:run
-```
+* [x] CRUD completo de todas las entidades
+* [x] Relaciones correctamente modeladas
+* [x] Persistencia en base de datos MySQL
+* [x] Al menos un test automático para `Movie`
+* [x] Documentación clara en este README
 
 ---
 
-## 🔗 Enlace al repositorio
+## 🧪 Tests
 
-[🔗 Ver repositorio en GitHub](https://github.com/MabelMaff/examen-practico-ironhack-proyecto-final)
+Incluye prueba para creación de una película. Se puede ampliar con tests para directores, premios y reseñas.
 
 ---
 
-## 👤 Autora
+## 📚 Tecnologías utilizadas
 
-Mábel Martínez Rodríguez [Linkedin](https://www.linkedin.com/in/mabelmr/) 
+* Java 17
+* Spring Boot
+* Spring Data JPA
+* MySQL
+* Maven
+* JUnit
+
+---
+
+## ✨ Autoría
+
+Desarrollado por Mábel Martínez como parte del módulo 3 del bootcamp de Ironhack.
+
+
 
