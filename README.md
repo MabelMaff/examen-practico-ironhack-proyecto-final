@@ -172,6 +172,6 @@ En este proyecto usamos ambos, según la situación.
 
 **Mábel Martínez Rodríguez**
 Proyecto para prácticas de desarrollo backend con Spring Boot y JPA.
-Por Mábel Martínez Rodríguez para Ironhack.
+Curso POO y GBBDD de Ironhack.
 
 
