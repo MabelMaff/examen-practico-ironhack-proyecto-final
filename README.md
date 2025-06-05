@@ -1,72 +1,145 @@
-# 🏥 Multi-City Hospital API – Spring Boot + JPA
+# 🏥 Proyecto Backend - Examen Práctico Módulo 3
 
-Este proyecto es una API RESTful desarrollada con **Spring Boot** y **Spring Data JPA** para gestionar la información de **empleades** y **pacientes** en un hospital distribuido en varias ciudades. Permite realizar operaciones CRUD y consultas filtradas avanzadas.
+Este proyecto es una aplicación backend desarrollada con **Java + Spring Boot**, conectada a una base de datos **MySQL**, que modela un sistema de gestión para un centro médico.
 
-## 📂 Estructura del Proyecto
+## ✅ Objetivo
+
+Implementar una aplicación completa con:
+
+- Modelo de datos con relaciones
+- Repositorios con JPA
+- Controladores REST con rutas CRUD
+- Capa de servicios
+- Pruebas unitarias
+
+---
+
+## 🧱 Estructura del proyecto
 
 ```
 
 src/
 ├── main/
-│   ├── java/com/example/hospital/
-│   │   ├── controllers/
-│   │   │   ├── EmployeeController.java
-│   │   │   └── PatientController.java
-│   │   ├── entities/
-│   │   │   ├── Employee.java
-│   │   │   └── Patient.java
-│   │   ├── enums/
-│   │   │   └── EmployeeStatus.java
-│   │   ├── repositories/
-│   │   │   ├── EmployeeRepository.java
-│   │   │   └── PatientRepository.java
-│   │   └── HospitalApplication.java
+│   ├── java/
+│   │   └── com/example/clinic/
+│   │       ├── controllers/
+│   │       │   └── DoctorController.java
+│   │       │   └── PatientController.java
+│   │       ├── models/
+│   │       │   └── Doctor.java
+│   │       │   └── Patient.java
+│   │       ├── repositories/
+│   │       │   └── DoctorRepository.java
+│   │       │   └── PatientRepository.java
+│   │       ├── services/
+│   │       │   └── DoctorService.java
+│   │       │   └── PatientService.java
+│   │       └── ClinicApplication.java
 │   └── resources/
 │       └── application.properties
-└── test/
+│
+├── test/
+│   └── java/
+│       └── com/example/clinic/
+│           ├── DoctorRepositoryTest.java
+│           └── PatientControllerTest.java
 
 ````
 
 ---
 
-## ⚙️ Tecnologías
+## 🧬 Entidades
 
-- Java 17+
-- Spring Boot 3.x
-- Spring Data JPA
-- MySQL (opcional: H2 en memoria para testing)
-- Maven
+### Doctor
 
----
-
-## 🚀 Cómo ejecutar el proyecto
-
-1. **Clona el repositorio:**
-
-```bash
-git clone https://github.com/tu_usuario/nombre-repo.git
-cd nombre-repo
+```java
+@Entity
+public class Doctor {
+    @Id
+    private Long id;
+    private String name;
+    private String department;
+    private String status;
+    // Getters & Setters
+}
 ````
 
-2. **Crea la base de datos en MySQL:**
+### Patient
 
-```sql
-CREATE DATABASE hospital_db;
+```java
+@Entity
+public class Patient {
+    @Id
+    private Long id;
+    private String name;
+    private LocalDate dateOfBirth;
+
+    @ManyToOne
+    @JoinColumn(name = "admitted_by")
+    private Doctor admittedBy;
+}
 ```
 
-3. **Configura `application.properties`:**
+---
+
+## 🔌 Repositorios
+
+* `DoctorRepository`: con método personalizado `findByStatus(String status)`
+* `PatientRepository`: con método `findByAdmittedByDepartment(String department)`
+
+---
+
+## 🔁 Controladores REST
+
+Implementados con rutas para:
+
+* `GET` – obtener pacientes y doctores
+* `POST` – añadir pacientes y doctores
+* `PUT` / `PATCH` – actualizar estado o departamento
+* `DELETE` – eliminar registros
+
+---
+
+## 🧠 Servicio
+
+La lógica entre los controladores y los repositorios está gestionada por `DoctorService` y `PatientService`.
+
+---
+
+## 🧪 Pruebas
+
+Se han implementado:
+
+* `DoctorRepositoryTest.java` – test unitario de método personalizado
+* `PatientControllerTest.java` – test de endpoint `GET /patients`
+
+---
+
+## 💾 Configuración de Base de Datos
+
+En `application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/hospital_db
+spring.datasource.url=jdbc:mysql://localhost:3306/clinic_db
 spring.datasource.username=TU_USUARIO
 spring.datasource.password=TU_CONTRASEÑA
-
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
 ```
 
-4. **Ejecuta la aplicación desde tu IDE o consola:**
+---
+
+## 🛠 Cómo ejecutar el proyecto
+
+1. Clona el repositorio:
+
+```bash
+git clone https://github.com/TU_USUARIO/NOMBRE_DEL_REPO.git
+```
+
+2. Configura `application.properties` con tu base de datos
+
+3. Lanza la aplicación desde tu IDE o ejecuta:
 
 ```bash
 ./mvnw spring-boot:run
@@ -74,104 +147,19 @@ spring.jpa.properties.hibernate.format_sql=true
 
 ---
 
-## 🧪 Datos Semilla
+## 🔗 Enlace al repositorio
 
-### 🧑‍⚕️ Empleades (Employee)
-
-| ID     | Departamento | Nombre          | Estado   |
-| ------ | ------------ | --------------- | -------- |
-| 356712 | cardiology   | Alonso Flores   | ON\_CALL |
-| 564134 | immunology   | Sam Ortega      | ON       |
-| 761527 | cardiology   | German Ruiz     | OFF      |
-| 166552 | pulmonary    | Maria Lin       | ON       |
-| 156545 | orthopaedic  | Paolo Rodriguez | ON\_CALL |
-| 172456 | psychiatric  | John Paul Armes | OFF      |
-
-### 🧍 Pacientes (Patient)
-
-| ID | Nombre            | Fecha Nacimiento | Admitted\_By |
-| -- | ----------------- | ---------------- | ------------ |
-| 1  | Jaime Jordan      | 1984-03-02       | 564134       |
-| 2  | Marian Garcia     | 1972-01-12       | 564134       |
-| 3  | Julia Dusterdieck | 1954-06-11       | 356712       |
-| 4  | Steve McDuck      | 1931-11-10       | 761527       |
-| 5  | Marian Garcia     | 1999-02-15       | 172456       |
+[🔗 Ver repositorio en GitHub](https://github.com/TU_USUARIO/NOMBRE_DEL_REPO)
 
 ---
 
-## 🌐 Endpoints REST
+## 👤 Autora
 
-### 📋 Empleades
+Mábel Martínez Rodríguez
 
-| Método | Ruta                          | Descripción                                 |
-| ------ | ----------------------------- | ------------------------------------------- |
-| GET    | `/employees`                  | Obtener todos los médicos                   |
-| GET    | `/employees/{id}`             | Obtener médico por ID                       |
-| GET    | `/employees/status/{status}`  | Filtrar por estado (`ON`, `OFF`, `ON_CALL`) |
-| GET    | `/employees/department/{dep}` | Filtrar por departamento                    |
-| POST   | `/employees`                  | Crear nuevo médico                          |
-| PATCH  | `/employees/{id}/status`      | Cambiar el estado del médico                |
-| PATCH  | `/employees/{id}/department`  | Actualizar el departamento                  |
+```
 
 ---
 
-### 👩 Pacientes
-
-| Método | Ruta                                                  | Descripción                                     |
-| ------ | ----------------------------------------------------- | ----------------------------------------------- |
-| GET    | `/patients`                                           | Obtener todos los pacientes                     |
-| GET    | `/patients/{id}`                                      | Obtener paciente por ID                         |
-| GET    | `/patients/birth-range?from=YYYY-MM-DD&to=YYYY-MM-DD` | Pacientes nacides entre dos fechas              |
-| GET    | `/patients/doctor-department/{dep}`                   | Pacientes por departamento de su médico admisor |
-| GET    | `/patients/doctor-status/OFF`                         | Pacientes cuyo médico está OFF                  |
-| POST   | `/patients`                                           | Crear nuevo paciente                            |
-| PUT    | `/patients/{id}`                                      | Actualizar toda la información de un paciente   |
-
----
-
-## ❓ Preguntas Requeridas
-
-### ❓¿Usaste el mismo tipo de ruta para actualizar el departamento del doctor y la información del paciente?
-
-No. Para el departamento del doctor usé `PATCH` (actualización parcial), y para el paciente usé `PUT` (actualización completa del recurso).
-
----
-
-### 💭 ¿Por qué elegiste esa estrategia?
-
-Porque cuando quiero actualizar solo un campo (como el estado o departamento), es más lógico usar `PATCH`. En cambio, para actualizar todos los datos de un paciente, usar `PUT` es más estándar.
-
----
-
-### ⚖️ ¿Ventajas y desventajas de PUT y PATCH?
-
-| Estrategia | Ventajas                                            | Desventajas                                |
-| ---------- | --------------------------------------------------- | ------------------------------------------ |
-| PUT        | Reemplaza el recurso completo, más fácil de validar | Menos eficiente si solo cambias 1 campo    |
-| PATCH      | Solo actualiza lo que cambia, más liviano           | Más complejo de validar y menos predecible |
-
----
-
-### 💡 Coste-beneficio entre PUT y PATCH
-
-* `PATCH` es ideal para modificaciones rápidas y localizadas.
-* `PUT` es más seguro cuando se quiere mantener integridad total en la estructura del recurso.
-
-En este proyecto usamos ambos, según la situación.
-
----
-
-## 📌 Notas Finales
-
-* Este proyecto está preparado para escalar fácilmente añadiendo más roles, validaciones o filtros.
-* Si lo prefieres, puedes usar una base de datos en memoria como **H2** para pruebas automáticas.
-
----
-
-## 🧑‍💻 Autora
-
-**Mábel Martínez Rodríguez**
-Proyecto para prácticas de desarrollo backend con Spring Boot y JPA.
-Curso POO y GBBDD de Ironhack.
 
 
