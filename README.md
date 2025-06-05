@@ -155,5 +155,5 @@ git clone https://github.com/TU_USUARIO/NOMBRE_DEL_REPO.git
 
 ## 👤 Autora
 
-Mábel Martínez Rodríguez
+Mábel Martínez Rodríguez [Linkedin](https://www.linkedin.com/in/mabelmr/) 
 
