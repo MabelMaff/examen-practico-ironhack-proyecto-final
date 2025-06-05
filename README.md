@@ -149,7 +149,7 @@ git clone https://github.com/TU_USUARIO/NOMBRE_DEL_REPO.git
 
 ## 🔗 Enlace al repositorio
 
-[🔗 Ver repositorio en GitHub](https://github.com/TU_USUARIO/NOMBRE_DEL_REPO)
+[🔗 Ver repositorio en GitHub](https://github.com/MabelMaff/examen-practico-ironhack-proyecto-final)
 
 ---
 
